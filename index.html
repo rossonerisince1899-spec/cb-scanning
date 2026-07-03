@@ -24,9 +24,15 @@ html,body{
 }
 
 #display{
-  font-size:45vw;
+  font-size:80vw;
   font-weight:bold;
   display:none;
+  line-height:1;
+  text-align:center;
+}
+
+#display.color{
+  font-size:95vw;
 }
 
 button{
@@ -130,9 +136,10 @@ function change(){
   }
 
   if(mode === "color"){
-    const item = nextColor();
-    display.textContent = item.text;
-    display.classList.add(item.cls);
+  const item = nextColor();
+  display.textContent = item.text;
+  display.classList.add(item.cls);
+  display.classList.add("color");
   }
 }
 
