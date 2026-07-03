@@ -19,49 +19,88 @@ html,body{
   overflow:hidden;
 }
 
+#menu{
+  text-align:center;
+}
+
 #num{
   font-size:45vw;
   font-weight:bold;
   display:none;
 }
 
-#start{
-  font-size:40px;
-  padding:20px 40px;
+button{
+  font-size:32px;
+  padding:18px 30px;
+  margin:8px;
   border:none;
-  border-radius:20px;
+  border-radius:18px;
   background:white;
   color:black;
   font-weight:bold;
+}
+
+.speed{
+  background:#333;
+  color:white;
+}
+
+.speed.active{
+  background:white;
+  color:black;
 }
 </style>
 </head>
 
 <body>
 
-<button id="start">開始</button>
+<div id="menu">
+  <div>
+    <button class="speed" data-speed="1000">1秒</button>
+    <button class="speed active" data-speed="2000">2秒</button>
+    <button class="speed" data-speed="3000">3秒</button>
+  </div>
+  <button id="start">開始</button>
+</div>
+
 <div id="num">7</div>
 
 <script>
 let timer = null;
 let running = false;
+let speed = 2000;
 
+const menu = document.getElementById("menu");
 const startBtn = document.getElementById("start");
 const num = document.getElementById("num");
+const speedButtons = document.querySelectorAll(".speed");
 
 function change(){
   num.textContent = Math.floor(Math.random() * 9) + 1;
 }
 
+speedButtons.forEach(function(button){
+  button.addEventListener("click", function(e){
+    e.stopPropagation();
+
+    speedButtons.forEach(function(b){
+      b.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    speed = Number(button.dataset.speed);
+  });
+});
+
 startBtn.addEventListener("click", function(e){
   e.stopPropagation();
 
   running = true;
-  startBtn.style.display = "none";
+  menu.style.display = "none";
   num.style.display = "block";
 
   change();
-  timer = setInterval(change, 2000);
+  timer = setInterval(change, speed);
 });
 
 document.body.addEventListener("click", function(){
@@ -71,7 +110,7 @@ document.body.addEventListener("click", function(){
   clearInterval(timer);
 
   num.style.display = "none";
-  startBtn.style.display = "block";
+  menu.style.display = "block";
 });
 </script>
 
