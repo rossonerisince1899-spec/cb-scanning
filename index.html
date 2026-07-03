@@ -20,17 +20,35 @@ html,body{
   font-size:45vw;
   font-weight:bold;
 }
+#start{
+  font-size:40px;
+  padding:20px 40px;
+  border-radius:20px;
+  border:none;
+  background:#fff;
+  color:#000;
+  font-weight:bold;
+}
 </style>
 </head>
 <body>
-<div id="num">7</div>
+<button id="start">開始</button>
+<div id="num" style="display:none;">7</div>
+
 <script>
+let timer;
+
 function change(){
   document.getElementById("num").textContent =
     Math.floor(Math.random()*9)+1;
 }
-change();
-setInterval(change,2000);
+
+document.getElementById("start").addEventListener("click", function(){
+  document.getElementById("start").style.display = "none";
+  document.getElementById("num").style.display = "block";
+  change();
+  timer = setInterval(change,2000);
+});
 </script>
 </body>
 </html>
