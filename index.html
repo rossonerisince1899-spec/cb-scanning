@@ -7,83 +7,72 @@
 
 <style>
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    background:#000;
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:Arial,sans-serif;
-    overflow:hidden;
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
 }
 
 #num{
-    font-size:45vw;
-    font-weight:bold;
-    display:none;
+  font-size:45vw;
+  font-weight:bold;
+  display:none;
 }
 
 #start{
-    font-size:40px;
-    padding:20px 40px;
-    border:none;
-    border-radius:20px;
-    background:white;
-    color:black;
-    font-weight:bold;
+  font-size:40px;
+  padding:20px 40px;
+  border:none;
+  border-radius:20px;
+  background:white;
+  color:black;
+  font-weight:bold;
 }
 </style>
-
 </head>
 
 <body>
 
 <button id="start">開始</button>
-
 <div id="num">7</div>
 
 <script>
+let timer = null;
+let running = false;
 
-let timer=null;
-let running=false;
+const startBtn = document.getElementById("start");
+const num = document.getElementById("num");
 
 function change(){
-
-    document.getElementById("num").textContent=
-    Math.floor(Math.random()*9)+1;
-
+  num.textContent = Math.floor(Math.random() * 9) + 1;
 }
 
-document.getElementById("start").onclick=function(){
+startBtn.addEventListener("click", function(e){
+  e.stopPropagation();
 
-    running=true;
+  running = true;
+  startBtn.style.display = "none";
+  num.style.display = "block";
 
-    this.style.display="none";
+  change();
+  timer = setInterval(change, 2000);
+});
 
-    document.getElementById("num").style.display="block";
+document.body.addEventListener("click", function(){
+  if(!running) return;
 
-    change();
+  running = false;
+  clearInterval(timer);
 
-    timer=setInterval(change,2000);
-
-}
-
-document.body.onclick=function(){
-
-    if(!running)return;
-
-    running=false;
-
-    clearInterval(timer);
-
-    document.getElementById("num").style.display="none";
-
-    document.getElementById("start").style.display="block";
-
-}
-
+  num.style.display = "none";
+  startBtn.style.display = "block";
+});
 </script>
 
 </body>
