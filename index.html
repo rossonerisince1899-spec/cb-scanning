@@ -30,9 +30,9 @@ html,body{
 }
 
 button{
-  font-size:32px;
-  padding:18px 30px;
-  margin:8px;
+  font-size:30px;
+  padding:16px 26px;
+  margin:7px;
   border:none;
   border-radius:18px;
   background:white;
@@ -40,15 +40,21 @@ button{
   font-weight:bold;
 }
 
-.speed{
+.option{
   background:#333;
   color:white;
 }
 
-.speed.active{
+.option.active{
   background:white;
   color:black;
 }
+
+.red{ color:#ff3b30; }
+.blue{ color:#0a84ff; }
+.yellow{ color:#ffd60a; }
+.green{ color:#30d158; }
+.white{ color:white; }
 </style>
 </head>
 
@@ -56,10 +62,16 @@ button{
 
 <div id="menu">
   <div>
-    <button class="speed" data-speed="1000">1秒</button>
-    <button class="speed active" data-speed="2000">2秒</button>
-    <button class="speed" data-speed="3000">3秒</button>
+    <button class="option mode active" data-mode="number">数字</button>
+    <button class="option mode" data-mode="color">色</button>
   </div>
+
+  <div>
+    <button class="option speed" data-speed="1000">1秒</button>
+    <button class="option speed active" data-speed="2000">2秒</button>
+    <button class="option speed" data-speed="3000">3秒</button>
+  </div>
+
   <button id="start">開始</button>
 </div>
 
@@ -69,46 +81,71 @@ button{
 let timer = null;
 let running = false;
 let speed = 2000;
+let mode = "number";
 
 const menu = document.getElementById("menu");
 const startBtn = document.getElementById("start");
 const num = document.getElementById("num");
 const speedButtons = document.querySelectorAll(".speed");
+const modeButtons = document.querySelectorAll(".mode");
+
+const colors = [
+  { text:"赤", cls:"red" },
+  { text:"青", cls:"blue" },
+  { text:"黄", cls:"yellow" },
+  { text:"緑", cls:"green" }
+];
+
+function clearClasses(){
+  num.className = "";
+}
 
 function change(){
-  num.textContent = Math.floor(Math.random() * 9) + 1;
+  clearClasses();
+
+  if(mode === "number"){
+    num.textContent = Math.floor(Math.random() * 9) + 1;
+    num.classList.add("white");
+  }
+
+  if(mode === "color"){
+    const item = colors[Math.floor(Math.random() * colors.length)];
+    num.textContent = item.text;
+    num.classList.add(item.cls);
+  }
 }
 
 speedButtons.forEach(function(button){
   button.addEventListener("click", function(e){
     e.stopPropagation();
-
-    speedButtons.forEach(function(b){
-      b.classList.remove("active");
-    });
-
+    speedButtons.forEach(function(b){ b.classList.remove("active"); });
     button.classList.add("active");
     speed = Number(button.dataset.speed);
   });
 });
 
+modeButtons.forEach(function(button){
+  button.addEventListener("click", function(e){
+    e.stopPropagation();
+    modeButtons.forEach(function(b){ b.classList.remove("active"); });
+    button.classList.add("active");
+    mode = button.dataset.mode;
+  });
+});
+
 startBtn.addEventListener("click", function(e){
   e.stopPropagation();
-
   running = true;
   menu.style.display = "none";
   num.style.display = "block";
-
   change();
   timer = setInterval(change, speed);
 });
 
 document.body.addEventListener("click", function(){
   if(!running) return;
-
   running = false;
   clearInterval(timer);
-
   num.style.display = "none";
   menu.style.display = "block";
 });
